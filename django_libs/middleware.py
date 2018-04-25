@@ -7,8 +7,19 @@ from django.core.mail import mail_managers
 from django.http import HttpResponseRedirect
 from django.utils.encoding import force_text
 
+try:  # django 1.10+
+    from django import urls
+except ImportError:
+    from django.core import urlresolvers as urls
 
-class AjaxRedirectMiddleware(object):
+try:  # django 1.10+
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    class MiddlewareMixin(object):
+        def __init__(self, get_response=None):
+            pass
+
+class AjaxRedirectMiddleware(MiddlewareMixin):
     """
     Middleware that sets a made up status code when a redirect has happened.
 
@@ -28,7 +39,6 @@ class AjaxRedirectMiddleware(object):
             if type(response) == HttpResponseRedirect:
                 response.status_code = 278
         return response
-
 
 class ErrorMiddleware(object):
     """Alter HttpRequest objects on Error."""
