@@ -576,3 +576,7 @@ def append_s(value):
 @register.simple_tag
 def get_site():
     return Site.objects.get_current()
+
+@register.simple_tag
+def get_list_item(l, x):
+    return l[x]
